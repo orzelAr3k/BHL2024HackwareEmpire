@@ -1,7 +1,18 @@
-#!/usr/bin/python
-import sys
-import Adafruit_DHT
+import time
+import adafruit_dht
+import board
+
+dht_device = adafruit_dht.DHT11(board.D18)
 
 while True:
-    humidity, temperature = Adafruit_DHT.read_retry(11, 18)
-    print(f'Temp: {temperature} C  Humidity: {humidity} %')
+    try:
+        temperature = dht_device.temperature
+
+        humidity = dht_device.humidity
+
+        print(f'Temp: {temperature} C  Humidity: {humidity} %')
+    except RuntimeError as err:
+        print(err.args[0])
+
+    time.sleep(2.0)
+    
