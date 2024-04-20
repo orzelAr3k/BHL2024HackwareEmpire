@@ -34,6 +34,7 @@ while True:
 
     if(counter >= 100):
         mp.publish(temperature_acc/counter, humidity_acc/counter, noise_acc > 10)
+        print(f"temp: {temperature_acc/counter} deg, hum: {humidity_acc/counter}%, Loud: {noise_acc > 10}")
         temperature_acc = 0
         humidity_acc = 0
         noise_acc = 0
