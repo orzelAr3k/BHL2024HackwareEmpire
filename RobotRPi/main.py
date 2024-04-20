@@ -26,7 +26,6 @@ while True:
 
         humidity_acc += dht_device.humidity
     except RuntimeError as err:
-        print(err.args[0])
         continue
     
     if (GPIO.input(MIC_PIN) == True):
