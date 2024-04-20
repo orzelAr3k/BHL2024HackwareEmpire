@@ -3,3 +3,7 @@
 .env
 server/dist
 RobotRPi/__pycache__/
+OfficeConfigurator/bin/
+OfficeConfigurator/obj/
+RobotRPi/test.py
+OfficeConfigurator/.vs/
