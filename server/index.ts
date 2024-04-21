@@ -39,19 +39,19 @@ const main = async () => {
         const devices = (await mongo.collection<Station>('devices').findOne({ _id: body.stationId }))?.devices;
         console.log(devices);
         let data: any = {};
-        if (measurements.temperature > 25) {
+        if (measurements.temperature > thresholds.temperatures.max) {
             data.temperature = 'Temperature too high!' 
             // console.log('Temperatura za wysoka!');
         }
-        if (measurements.temperature < 20) {
+        if (measurements.temperature < thresholds.temperatures.min) {
             data.temperature = 'Temperature too low!' 
             // console.log('Temperatura za niska!')
         }
-        if (measurements.humidity < 40) {
+        if (measurements.humidity < thresholds.humidity.min) {
             data.humidity = 'Humidity to low!'
             // console.log('Za niska wigotność!')
         }
-        if (measurements.humidity > 60) {
+        if (measurements.humidity > thresholds.humidity.max) {
             data.humidity = 'Humidity to high!'
             // console.log('Za wysoka wilgotność!')
         }
