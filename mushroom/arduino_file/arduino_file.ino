@@ -59,7 +59,7 @@ void ICACHE_RAM_ATTR button_interrupt(){
 
 void print_game_ready(){
   lcd.clear(); 
-  lcd.begin(16, 2); /
+  lcd.begin(16, 2); 
   lcd.setCursor(3, 0); 
   lcd.print("Game ready"); 
   lcd.setCursor(1, 1); 
@@ -220,7 +220,7 @@ void response_to_server(std::string message){
     print_measurement(map);
   } else if (msg_type == "game_response"){
     print_server_sck();
-  } else if (msg_type = "game_success"){
+  } else if (msg_type == "game_accept"){
     print_game_ready();
   }
 }
@@ -279,6 +279,6 @@ void loop() {
 
   }
 
-  delay(500);
+  delay(1000);
   
 }
