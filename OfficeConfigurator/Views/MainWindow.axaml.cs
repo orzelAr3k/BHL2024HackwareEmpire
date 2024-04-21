@@ -1,4 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.ReactiveUI;
+using OfficeConfigurator.ViewModels;
+using System.Threading.Tasks;
 
 namespace OfficeConfigurator.Views
 {

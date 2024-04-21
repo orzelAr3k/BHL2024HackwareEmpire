@@ -15,35 +15,58 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-	<StackPanel Margin="20" HorizontalAlignment="Center" Width="600">
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="600">
-			<StackPanel Margin="5">
+	<DockPanel Margin="20" HorizontalAlignment="Center" Width="700" Height="500" VerticalAlignment="Top">
+		<DockPanel HorizontalAlignment="Left" Width="700" DockPanel.Dock="Top" Height="100">
+			<StackPanel Margin="5" DockPanel.Dock="Left">
 		        <TextBlock Margin="5" >Define station:</TextBlock>
 		        <TextBox  Watermark="Enter station ID" Text="{Binding StationId}" />
 			</StackPanel>
-		    <StackPanel Margin="5">
+		    <StackPanel Margin="5" DockPanel.Dock="Left">
 				<TextBlock Margin="5" >Define desks:</TextBlock>
 				<TextBox Watermark="Enter desks numbers separated by comas!" Text="{Binding DeskIds}" />
 			</StackPanel>
-		    <Button Margin="5" Command="{Binding ClickHandler}" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center">
+		    <Button Margin="5" Command="{Binding ClickHandler}" VerticalAlignment="Center" Height="60" DockPanel.Dock="Right">
 				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Add Station</TextBlock>
 			</Button>
 		    <!--<TextBlock Text="{Binding FullStationStr}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-		</StackPanel>
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="600">
-			<StackPanel Margin="5">
+		</DockPanel>
+		<DockPanel HorizontalAlignment="Left" Width="700" DockPanel.Dock="Top" Height="100">
+			<StackPanel Margin="5" DockPanel.Dock="Left">
 				<TextBlock Margin="5" >Define activity name:</TextBlock>
 				<TextBox  Watermark="Enter activity name" Text="{Binding ActivityName}" />
 			</StackPanel>
-			<StackPanel Margin="5">
+			<StackPanel Margin="5" DockPanel.Dock="Left">
 				<TextBlock Margin="5" >Define max players:</TextBlock>
 				<TextBox Watermark="Enter players count!" Text="{Binding ActivityPlayerCount}" />
 			</StackPanel>
-			<Button Margin="5" Command="{Binding ClickGameHandler}" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center">
+			<Button Margin="5" Command="{Binding ClickGameHandler}" VerticalAlignment="Center" Height="60" DockPanel.Dock="Right">
 				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Add activity</TextBlock>
 			</Button>
 			<!--<TextBlock Text="{Binding FullStationStr}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-		</StackPanel>
-	</StackPanel>
+		</DockPanel>
+		<DockPanel HorizontalAlignment="Left" Width="700" DockPanel.Dock="Top" Height="100">
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Min temp:</TextBlock>
+				<TextBox  Watermark="Enter max temp" Text="{Binding TempMin}" />
+			</StackPanel>
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Max temp:</TextBlock>
+				<TextBox Watermark="Enter min Temp" Text="{Binding TempMax}" />
+			</StackPanel>
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Min hum:</TextBlock>
+				<TextBox  Watermark="Enter min hum" Text="{Binding HumMin}" />
+			</StackPanel>
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Max hum:</TextBlock>
+				<TextBox Watermark="Enter max hum" Text="{Binding HumMax}" />
+			</StackPanel>
+			<Button Margin="5" Command="{Binding ClickLimitsHandler}" VerticalAlignment="Center" Height="60" DockPanel.Dock="Right">
+				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Redefine thresholds</TextBlock>
+			</Button>
+			<!--<TextBlock Text="{Binding FullStationStr}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+		</DockPanel>
+		<TextBlock Margin="10" Text="{Binding DebugString}" DockPanel.Dock="Bottom"/>
+	</DockPanel>
 
 </Window>
