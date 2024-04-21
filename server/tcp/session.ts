@@ -1,11 +1,13 @@
 import * as net from "net";
 import { broadcast, gamesSessions } from "./tcp";
+import { delayBetweenActivities } from "..";
 
 export class Session {
 	private id: string = "";
 	private socket: net.Socket | null;
 	private busy: boolean = false;
 	private sended: boolean = false;
+	private timer: boolean = false;
 
 	constructor(socket: net.Socket) {
 		this.socket = socket;
@@ -34,6 +36,15 @@ export class Session {
 
 	get getSended() {
 		return this.sended;
+	}
+
+	get getTimer() {
+		return this.timer;
+	}
+
+	setTimer() {
+		this.timer = true;
+		setTimeout(() => this.timer = false, delayBetweenActivities);
 	}
 
 	dispose() {
@@ -75,15 +86,23 @@ export class Session {
 						type: 'game',
 						gameId: game.id,
 						name: game.game.name,
-						members: game.game.members,
-						players: game.players.filter(p => p.status === 'accept').length + 1
-					}), (s: Session) => !s.getBusy)
+						members: game.game.members.toString(),
+						players: (game.players.filter(p => p.status === 'accept').length + 1).toString()
+					}), (s: Session) => !s.getBusy && !game.players.map(p => p.id).includes(this.getId));
+					broadcast(JSON.stringify({
+						type: 'lobby',
+						gameId: game.id,
+						name: game.game.name,
+						members: game.game.members.toString(),
+						players: (game.players.filter(p => p.status === 'accept').length + 1).toString()
+					}), (s: Session) => !s.getBusy && game.players.filter(p => p.status === 'accept').map(p => p.id).includes(this.getId), true);
 				}
 				if (game && game?.players.filter(p => p.status === 'accept').length === game.game.members - 1) {
 					game.players.forEach(p => p.session.setSended = false);
 					const gameIndex = gamesSessions.findIndex(g => g.id === json.gameId);
 					gamesSessions.splice(gameIndex, 1);
-					broadcast(JSON.stringify({ type: 'game_accept', gameId: game.id, status: 'ended' }), (s: Session) => !s.getBusy, false)
+					this.setTimer();
+					broadcast(JSON.stringify({ type: 'game_accept', gameId: game.id, status: 'ended' }), (s: Session) => !s.getBusy, false);
 				}
 				console.log(game);
 				break;

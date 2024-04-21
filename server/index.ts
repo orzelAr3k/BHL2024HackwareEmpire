@@ -8,7 +8,9 @@ import expressAsyncHandler from 'express-async-handler';
 import { Thresholds, generateRandIndex, nid } from './utils/helpers';
 import { Session } from './tcp/session';
 
-let thresholds: any;
+export let thresholds: any;
+export let noOfActivitiesPerDay = 60000;
+export let delayBetweenActivities = 60000;
 
 const main = async () => {
     const mongo = await connectionToMongo();
@@ -19,6 +21,8 @@ const main = async () => {
 
     thresholds = await mongo.collection('config').findOne({ _id: 'thresholds' as any }) || Thresholds;
     app.post('/timers', (req: Request, res: Response) => {
+        noOfActivitiesPerDay = req.body.noOfActivitiesPerDay;
+        delayBetweenActivities = req.body.delayBetweenActivities;
         res.sendStatus(200);
     })
 
@@ -91,7 +95,7 @@ const main = async () => {
             name: game.game.name,
             members: game.game.members.toString(),
             players: '1'
-        }), (s: Session) => !s.getBusy, true);
+        }), (s: Session) => !s.getBusy && !s.getTimer, true);
 
     }));
 
