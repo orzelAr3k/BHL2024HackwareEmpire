@@ -1,0 +1,72 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:OfficeConfigurator.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="OfficeConfigurator.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="OfficeConfigurator">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<DockPanel Margin="20" HorizontalAlignment="Center" Width="700" Height="500" VerticalAlignment="Top">
+		<DockPanel HorizontalAlignment="Left" Width="700" DockPanel.Dock="Top" Height="100">
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+		        <TextBlock Margin="5" >Define station:</TextBlock>
+		        <TextBox  Watermark="Enter station ID" Text="{Binding StationId}" />
+			</StackPanel>
+		    <StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Define desks:</TextBlock>
+				<TextBox Watermark="Enter desks numbers separated by comas!" Text="{Binding DeskIds}" />
+			</StackPanel>
+		    <Button Margin="5" Command="{Binding ClickHandler}" VerticalAlignment="Center" Height="60" DockPanel.Dock="Right">
+				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Add Station</TextBlock>
+			</Button>
+		    <!--<TextBlock Text="{Binding FullStationStr}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+		</DockPanel>
+		<DockPanel HorizontalAlignment="Left" Width="700" DockPanel.Dock="Top" Height="100">
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Define activity name:</TextBlock>
+				<TextBox  Watermark="Enter activity name" Text="{Binding ActivityName}" />
+			</StackPanel>
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Define max players:</TextBlock>
+				<TextBox Watermark="Enter players count!" Text="{Binding ActivityPlayerCount}" />
+			</StackPanel>
+			<Button Margin="5" Command="{Binding ClickGameHandler}" VerticalAlignment="Center" Height="60" DockPanel.Dock="Right">
+				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Add activity</TextBlock>
+			</Button>
+			<!--<TextBlock Text="{Binding FullStationStr}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+		</DockPanel>
+		<DockPanel HorizontalAlignment="Left" Width="700" DockPanel.Dock="Top" Height="100">
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Min temp:</TextBlock>
+				<TextBox  Watermark="Enter max temp" Text="{Binding TempMin}" />
+			</StackPanel>
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Max temp:</TextBlock>
+				<TextBox Watermark="Enter min Temp" Text="{Binding TempMax}" />
+			</StackPanel>
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Min hum:</TextBlock>
+				<TextBox  Watermark="Enter min hum" Text="{Binding HumMin}" />
+			</StackPanel>
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Max hum:</TextBlock>
+				<TextBox Watermark="Enter max hum" Text="{Binding HumMax}" />
+			</StackPanel>
+			<Button Margin="5" Command="{Binding ClickLimitsHandler}" VerticalAlignment="Center" Height="60" DockPanel.Dock="Right">
+				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Redefine thresholds</TextBlock>
+			</Button>
+			<!--<TextBlock Text="{Binding FullStationStr}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+		</DockPanel>
+		<TextBlock Margin="10" Text="{Binding DebugString}" DockPanel.Dock="Bottom"/>
+	</DockPanel>
+
+</Window>
