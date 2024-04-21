@@ -7,6 +7,8 @@ import RPi.GPIO as GPIO
 
 MIC_PIN = 18
 
+NOISE_THRESHOLD = 3
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(MIC_PIN, GPIO.IN)
 
@@ -35,8 +37,8 @@ while True:
     counter+=1
 
     if(counter >= counter_limit):
-        mp.publish(temperature_acc/counter, humidity_acc/counter, noise_acc > 10)
-        print(f"temp: {temperature_acc/counter} deg, hum: {humidity_acc/counter}%, Loud: {noise_acc > 10}")
+        mp.publish(temperature_acc/counter, humidity_acc/counter, noise_acc > NOISE_THRESHOLD)
+        print(f"temp: {temperature_acc/counter} deg, hum: {humidity_acc/counter}%, Loud: {noise_acc > NOISE_THRESHOLD} ({noise_acc} out of {counter})")
         temperature_acc = 0
         humidity_acc = 0
         noise_acc = 0

@@ -40,6 +40,12 @@ namespace OfficeConfigurator.ViewModels
         public minMax humidity { get; set; }
     }
 
+    public class timers
+    {
+        public int noOfActivitiesPerDay { set; get; }
+        public int delayBetweenActivities { set; get; }
+    }
+
     public class MainWindowViewModel : ViewModelBase
     {
         public string StationId { set; get; } = "";
@@ -52,6 +58,9 @@ namespace OfficeConfigurator.ViewModels
 
         public int HumMin { set; get; }
         public int HumMax { set; get; }
+
+        public int NoOfActivitiesPerDay { set; get; }
+        public int DelayBetweenActivities { set; get; }
 
         HttpClient client = new HttpClient()
         {
@@ -149,6 +158,19 @@ namespace OfficeConfigurator.ViewModels
             string urlParameters = JsonSerializer.Serialize<limits>(ni);
 
             post(urlParameters, "thresholds/", "Thresholds redefined succesfully!");
+        }
+
+        public void UpdateTimers()
+        {
+            var ni = new timers()
+            {
+                noOfActivitiesPerDay = NoOfActivitiesPerDay,
+                delayBetweenActivities = DelayBetweenActivities
+            };
+
+            string urlParameters = JsonSerializer.Serialize<timers>(ni);
+
+            post(urlParameters, "timers/", "Break timers redefined succesfully!");
         }
 
         private void post(string urlParameters, string post_name, string comm)

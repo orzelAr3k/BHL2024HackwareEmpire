@@ -66,6 +66,20 @@
 			</Button>
 			<!--<TextBlock Text="{Binding FullStationStr}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
 		</DockPanel>
+		<DockPanel HorizontalAlignment="Left" Width="700" DockPanel.Dock="Top" Height="100">
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Define max number of daily activities:</TextBlock>
+				<TextBox  Watermark="Enter max no" Text="{Binding NoOfActivitiesPerDay}" />
+			</StackPanel>
+			<StackPanel Margin="5" DockPanel.Dock="Left">
+				<TextBlock Margin="5" >Define delay between activities:</TextBlock>
+				<TextBox Watermark="Enter delay" Text="{Binding DelayBetweenActivities}" />
+			</StackPanel>
+			<Button Margin="5" Command="{Binding UpdateTimers}" VerticalAlignment="Center" Height="60" DockPanel.Dock="Right">
+				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Redefine no. of activities</TextBlock>
+			</Button>
+			<!--<TextBlock Text="{Binding FullStationStr}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+		</DockPanel>
 		<TextBlock Margin="10" Text="{Binding DebugString}" DockPanel.Dock="Bottom"/>
 	</DockPanel>
 

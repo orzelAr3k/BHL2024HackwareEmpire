@@ -17,6 +17,12 @@ LiquidCrystal lcd(12, 14, 0, 4, 5, 16); //Informacja o podłączeniu nowego wyś
 typedef std::pair<std::string, std::string> key_val_pair;
 typedef std::map<std::string, std::string> json_map;
 
+enum sensor_data{
+  GOOD = 0,
+  TOO_LOW = 1,
+  TOO_HIGH = 2
+}; 
+
 const char* ssid     ="LPAWiFi1"; // Tu wpisz nazwę swojego wifi
 const char* password = "LPAWiFi1Password"; // Tu wpisz hasło do swojego wifi
 std::string game_id = "";
@@ -51,8 +57,76 @@ void ICACHE_RAM_ATTR button_interrupt(){
   }
 }
 
+void print_game_ready(){
+  lcd.clear(); 
+  lcd.begin(16, 2); 
+  lcd.setCursor(3, 0); 
+  lcd.print("Game ready"); 
+  lcd.setCursor(1, 1); 
+  lcd.print("time for break"); 
+}
+
+void print_server_sck(){
+  lcd.clear(); 
+  lcd.begin(16, 2); //Deklaracja typu
+  lcd.setCursor(5, 0); //Ustawienie kursora
+  lcd.print("Answer"); 
+  lcd.setCursor(2, 1); //Ustawienie kursora
+  lcd.print("acknowledged"); 
+}
+
+void lcd_measurement(sensor_data &temp, sensor_data &hum, sensor_data &noise){
+  lcd.clear(); 
+  lcd.begin(16, 2); //Deklaracja typu
+  lcd.setCursor(0, 0); //Ustawienie kursora
+  lcd.print("Bad environment"); 
+  lcd.setCursor(0, 1); //Ustawienie kursora
+
+  if (temp != GOOD){
+    if (temp == TOO_HIGH){
+      lcd.print("T-H"); //Wyświetlenie tekstu
+    } else {
+      lcd.print("T-L"); //Wyświetlenie tekstu
+    }
+  }
+  lcd.setCursor(5, 1); //Ustawienie kursora
+  if (hum != GOOD){
+    if (hum == TOO_HIGH){
+      lcd.print("H-H"); //Wyświetlenie tekstu
+    } else {
+      lcd.print("H-L"); //Wyświetlenie tekstu
+    }
+  }
+  lcd.setCursor(10, 1); //Ustawienie kursora
+  if (noise != GOOD){
+    lcd.print("L-H"); //Wyświetlenie tekstu
+  }    
+}
+
 void print_measurement(json_map &map){
-  
+  sensor_data tmp = GOOD;
+  sensor_data hum = GOOD;
+  sensor_data noise = GOOD;
+    if (map.find((std::string)(TEMP)) != map.end()){
+      std::string err = map[TEMP];
+      if (err.find("low") != std::string::npos){
+        tmp = TOO_LOW;
+      } else {
+        tmp = TOO_HIGH;
+      }
+    }
+    if (map.find((std::string)(HUM)) != map.end()){
+      std::string err = map[HUM];
+      if (err.find("low") != std::string::npos){
+        hum = TOO_LOW;
+      } else {
+        hum = TOO_HIGH;
+      }
+    }
+    if (map.find((std::string)(NOISE)) != map.end()){
+      noise = TOO_HIGH;
+    }
+  lcd_measurement(tmp, hum, noise);
 }
 
 void save_game_id(json_map &map){
@@ -143,7 +217,11 @@ void response_to_server(std::string message){
   if (msg_type == "game"){
     print_game(map);
   } else if (msg_type == "measurements"){
-    print_measurement()
+    print_measurement(map);
+  } else if (msg_type == "game_response"){
+    print_server_sck();
+  } else if (msg_type == "game_accept"){
+    print_game_ready();
   }
 }
 
@@ -201,6 +279,6 @@ void loop() {
 
   }
 
-  delay(500);
+  delay(1000);
   
 }
