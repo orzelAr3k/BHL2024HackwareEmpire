@@ -1,0 +1,19 @@
+### test
+
+POST http://localhost:3000/measurements
+content-type: application/json
+
+{ "measurements": { "temperature": "24", "noise": "true", "humidity": "100" } }
+
+
+### add game
+
+PUT http://localhost:3000/game
+content-type: application/json
+
+{ "name": "Chess", "members": 2 }
+
+### take break
+
+POST http://localhost:3000/takeBreak/10294
+content-type: application/json
