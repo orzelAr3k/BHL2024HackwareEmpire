@@ -11,8 +11,9 @@
 #define ACTUAL_PLAYERS "players"
 #define GAME_ID "gameId"
 #define MS_500 500
+#define S_30 (30*1000)
 
-LiquidCrystal lcd(12, 14, 0, 4, 5, 16); //Informacja o podłączeniu nowego wyświetlacza
+LiquidCrystal lcd(D6, D5, D3, D2, D1, D0); //Informacja o podłączeniu nowego wyświetlacza
 
 typedef std::pair<std::string, std::string> key_val_pair;
 typedef std::map<std::string, std::string> json_map;
@@ -29,6 +30,7 @@ std::string game_id = "";
 unsigned long button_time = 0;  
 unsigned long last_button_time = 0;
 bool busy = true;
+volatile bool ack_flag = false;
 WiFiClient client;
 
 void ICACHE_RAM_ATTR button_interrupt(){
@@ -39,6 +41,7 @@ void ICACHE_RAM_ATTR button_interrupt(){
   button_time = millis();
   if (button_time - last_button_time > MS_500){
     if (accept == LOW){
+      ack_flag = true;
       std::string usr_rsp = "accept";
       std::string rsp = game_response(usr_rsp, game_id);
       client.print(rsp.c_str());
@@ -57,6 +60,32 @@ void ICACHE_RAM_ATTR button_interrupt(){
   }
 }
 
+void print_no_connection(){
+  lcd.clear(); 
+  lcd.begin(16, 2); 
+  lcd.setCursor(0, 0); 
+  lcd.print("Disconnected :("); 
+  lcd.setCursor(1, 1); 
+  lcd.print("Reconnecting"); 
+  delay(1000);
+}
+
+void print_break(){
+  lcd.clear(); 
+  lcd.begin(16, 2); 
+  lcd.setCursor(0, 0); 
+  lcd.print("60/5 break time"); 
+  lcd.setCursor(1, 1); 
+  lcd.print("Pls acknowledge"); 
+  ack_flag = false;
+  while (!ack_flag){
+    delay(50);
+    Serial.println("Czas na kitkat"); 
+  }
+  lcd.clear(); 
+  delay(1000);
+}
+
 void print_game_ready(){
   lcd.clear(); 
   lcd.begin(16, 2); 
@@ -64,6 +93,7 @@ void print_game_ready(){
   lcd.print("Game ready"); 
   lcd.setCursor(1, 1); 
   lcd.print("time for break"); 
+  delay(2000); 
 }
 
 void print_server_sck(){
@@ -72,16 +102,19 @@ void print_server_sck(){
   lcd.setCursor(5, 0); //Ustawienie kursora
   lcd.print("Answer"); 
   lcd.setCursor(2, 1); //Ustawienie kursora
-  lcd.print("acknowledged"); 
+  lcd.print("acknowledged");
+  delay(2000);
 }
 
 void lcd_measurement(sensor_data &temp, sensor_data &hum, sensor_data &noise){
   lcd.clear(); 
   lcd.begin(16, 2); //Deklaracja typu
-  lcd.setCursor(0, 0); //Ustawienie kursora
-  lcd.print("Bad environment"); 
-  lcd.setCursor(0, 1); //Ustawienie kursora
+  if (temp || hum || noise){
+    lcd.setCursor(0, 0); //Ustawienie kursora
+    lcd.print("Bad environment"); 
+  }
 
+  lcd.setCursor(0, 1); //Ustawienie kursora
   if (temp != GOOD){
     if (temp == TOO_HIGH){
       lcd.print("T-H"); //Wyświetlenie tekstu
@@ -143,6 +176,22 @@ void print_game(json_map &map){
   lcd.print(name.c_str()); //Wyświetlenie tekstu
   lcd.setCursor(0, 1); //Ustawienie kursora
   lcd.print(players.c_str()); //Wyświetlenie tekstu
+  // unsigned long time = millis();
+  // unsigned long time_passed = 0;
+  // ack_flag = false;
+  // while (!ack_flag || time_passed > S_30){
+  //   if (ack_flag){
+  //     Serial.println("DELULU");
+  //     break;
+  //   }
+  //   time_passed = millis() - time;
+  //   delay(100);
+  // }
+  // if (!(!ack_flag && time_passed > S_30)){
+  //   std::string rej = "reject";
+  //   client.print(game_response(rej, game_id).c_str());
+  // }
+  delay(2000);
 }
 
 bool check_id(json_map &map){
@@ -222,6 +271,8 @@ void response_to_server(std::string message){
     print_server_sck();
   } else if (msg_type == "game_accept"){
     print_game_ready();
+  } else if (msg_type == "break"){
+    print_break();
   }
 }
 
@@ -239,7 +290,7 @@ void setup() {
   lcd.setCursor(0, 0); //Ustawienie kursora
   lcd.print("Good to see you"); //Wyświetlenie tekstu
   lcd.setCursor(0, 1); //Ustawienie kursora
-  lcd.print("Have a nice work"); //Wyświetlenie tekstu
+  lcd.print("Have a nice day"); //Wyświetlenie tekstu
   
   // Connect to WiFi network
   Serial.println();
@@ -257,9 +308,11 @@ void setup() {
   Serial.println("WiFi connected");
 
  if (client.connect("192.168.241.195", 9000)){  // connect to server
-      Serial.println("Connected to server");
-      client.print(welcome_msg.c_str());
-  } 
+    Serial.println("Connected to server");
+    client.print(welcome_msg.c_str());
+    delay(4000);
+  }
+  lcd.clear(); 
 }
 
 void loop() {
@@ -274,11 +327,12 @@ void loop() {
     }
   } else {
     Serial.println("Connection lost, trying to reconnect");
+    print_no_connection();
     client.connect("192.168.241.195", 9000);
     client.print(welcome_msg.c_str());
 
   }
 
-  delay(1000);
+  delay(500);
   
 }
