@@ -13,7 +13,12 @@ content-type: application/json
 
 { "name": "Chess", "members": 2 }
 
-### take break
+### take game
 
-POST http://localhost:3000/takeBreak/10294
+POST http://localhost:3000/takeGame/10294
+content-type: application/json
+
+
+### take break
+POST http://localhost:3000/takeBreak/10293
 content-type: application/json

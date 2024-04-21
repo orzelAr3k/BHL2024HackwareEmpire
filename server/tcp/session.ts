@@ -70,7 +70,7 @@ export class Session {
 				if (game && game.players.length < game.game.members - 1) {
 					game.players.push({ id: json.deviceId, status: json.type, session: this });
 					this.socket?.write(JSON.stringify({ status: 'accepted' }));
-					this.sended = true;
+					this.sended = false;
 					broadcast(JSON.stringify({
 						type: 'game',
 						gameId: game.id,
@@ -99,6 +99,7 @@ export class Session {
 			}
 			case 'busy': {
 				this.busy = !this.busy;
+				console.log(`${this.id} : ${this.busy}`);
 			}
 		}
 	}

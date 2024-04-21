@@ -7,7 +7,7 @@ export const sessions: Session[] = [];
 export const gamesSessions: GameSessions[] = [];
 
 export function getSession(id: string) {
-  return _.find(sessions, { id: id });
+  return sessions.find(s => s.getId === id);
 }
 
 export function broadcast(message: string, keySelector?: (arg: Session) => boolean, sended?: boolean) {
