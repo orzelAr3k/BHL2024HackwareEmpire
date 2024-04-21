@@ -1,9 +1,8 @@
 #include <string>
 
-#define ID 1029384756
+#define DEVICE_ID "10293"
 
-const std::string id = "ID : " + std::to_string(ID);
+const std::string welcome_msg = "{\"type\":\"id\", \"deviceId\":\"" + std::string(DEVICE_ID) + "\"}";
 
-const std::string accept = "{" + id + " user_answer : yes }"; 
+std::string game_response(std::string &usr_rsp, std::string &game_id); 
 
-const std::string decline = "{" + id + " user_answer : no }"; 
